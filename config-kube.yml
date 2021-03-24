@@ -1,0 +1,37 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: first-service
+  labels:
+    env: prod
+spec:
+  selectors:
+    matchLabels:
+      env: prod
+  type: NodePort
+  ports:
+  - protocol: TCP
+    port: 8080
+    targetPort: 8080
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: first-deploy
+  labels:
+    env: prod
+spec:
+  replicas: 2
+  selectors:
+    matchLabels:
+      env:prod
+  templete:
+    metadata:
+      labels:
+        env: prod
+    spec:
+      containers:
+      - name: first
+        image: $DOCKER_IMAGE_NAME:$BUILD_NUMBER
+        ports:
+        - conatinerPort: 8080
